@@ -9,7 +9,7 @@ import java.lang.annotation.Annotation;
  *         Date: 03.06.12
  *         Time: 18:30
  */
-public interface ICategoryFacilityFactory<A extends Annotation, T>
+public interface ICategoryFacilityFactory
 {
 
   /**
@@ -18,10 +18,6 @@ public interface ICategoryFacilityFactory<A extends Annotation, T>
    * @param pAnnotation the annotation for which this factory was used.
    * @return
    */
-  T createFacilityFactoryProvider(A pAnnotation);
-
-  Class<? extends A> getProcessableAnnotationClass();
-
-  Class<? extends T> getFacilityClass();
+  Object createFacility(Annotation pAnnotation) throws AnnotationNotSupportedException;
 
 }

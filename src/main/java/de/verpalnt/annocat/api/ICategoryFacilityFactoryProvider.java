@@ -10,6 +10,6 @@ import java.util.List;
 public interface ICategoryFacilityFactoryProvider
 {
 
-  List<ICategoryFacilityFactory> create();
+  List<ICategoryFacilityFactory> get();
 
 }

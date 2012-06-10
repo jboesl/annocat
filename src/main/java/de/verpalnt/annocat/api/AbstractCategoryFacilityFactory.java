@@ -1,6 +1,9 @@
 package de.verpalnt.annocat.api;
 
 import java.lang.annotation.Annotation;
+import java.text.MessageFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * An abstraction of ICategoryFacilityFactory so that one doesn't have to implement the methods
@@ -11,27 +14,33 @@ import java.lang.annotation.Annotation;
  *         Date: 06.06.12
  *         Time: 00:01
  */
-public abstract class AbstractCategoryFacilityFactory<A extends Annotation, T> implements ICategoryFacilityFactory<A, T>
+public abstract class AbstractCategoryFacilityFactory implements ICategoryFacilityFactory
 {
+  protected Map<Class<? extends Annotation>, Creator> creatorMap = new HashMap<>();
 
-  private Class<A> processableAnnotationClass;
-  private Class<T> facilityClass;
-
-  protected AbstractCategoryFacilityFactory(Class<A> processableAnnotationClass, Class<T> facilityClass)
+  protected AbstractCategoryFacilityFactory()
   {
-    this.processableAnnotationClass = processableAnnotationClass;
-    this.facilityClass = facilityClass;
+  }
+
+  protected <A extends Annotation> void register(Class<A> pAnnotationCls, Creator<A> pCreator)
+  {
+    creatorMap.put(pAnnotationCls, pCreator);
   }
 
   @Override
-  public Class<? extends A> getProcessableAnnotationClass()
+  public final Object createFacility(Annotation pAnnotation) throws AnnotationNotSupportedException
   {
-    return processableAnnotationClass;
+    Creator creator = creatorMap.get(pAnnotation.annotationType());
+    if (creator == null)
+      throw new AnnotationNotSupportedException(MessageFormat.format(
+          "Annotation ''{0}'' is not supported by factory ''{1}''.", pAnnotation, this));
+    //noinspection unchecked
+    return creator.create(pAnnotation);
   }
 
-  @Override
-  public Class<? extends T> getFacilityClass()
+  protected interface Creator<A extends Annotation>
   {
-    return facilityClass;
+    Object create(A pAnnotation);
   }
+
 }

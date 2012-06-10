@@ -1,5 +1,7 @@
 package de.verpalnt.annocat.spi;
 
+import de.verpalnt.annocat.api.IAnnotationSupplier;
+
 import javax.annotation.Nonnull;
 import java.lang.annotation.Annotation;
 import java.util.List;
@@ -12,6 +14,13 @@ import java.util.List;
 public class FacilityProvider implements IFacilityProvider
 {
 
+  private final FacilityFinder facilityFinder;
+
+  public FacilityProvider()
+  {
+    facilityFinder = new FacilityFinder();
+  }
+
   @Override
   public <T> T getFirst(IAnnotationSupplier<Iterable<Annotation>> pAnnoSupplier, Class<T> pFacilityClass)
   {
@@ -23,8 +32,7 @@ public class FacilityProvider implements IFacilityProvider
   @Override
   public <T> List<? extends T> getAll(IAnnotationSupplier<Iterable<Annotation>> pAnnoSupplier, Class<T> pFacilityClass)
   {
-    return new BasicFacilityFinder().getFacilities(pAnnoSupplier, pFacilityClass);
-    //return Lists.newArrayList();
+    return facilityFinder.getFacilities(pAnnoSupplier, pFacilityClass);
   }
 
 }

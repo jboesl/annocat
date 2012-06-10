@@ -1,8 +1,6 @@
 package de.verpalnt.annocat.spi;
 
-import de.verpalnt.annocat.api.AnnoCat;
-import de.verpalnt.annocat.api.ICategoryFacilityFactory;
-import de.verpalnt.annocat.api.ICategoryFacilityFactoryProvider;
+import de.verpalnt.annocat.api.*;
 
 import java.lang.annotation.*;
 import java.util.*;
@@ -12,14 +10,16 @@ import java.util.*;
  *         Date: 09.06.12
  *         Time: 21:36
  */
-class BasicFacilityFinder
+public class FacilityFinder
 {
 
   private static final Set<Class<? extends Annotation>> SYSTEM_ANNOTATIONS = new HashSet<>(Arrays.asList(
       Documented.class, Inherited.class, Retention.class, Target.class,
       Deprecated.class, Override.class, SafeVarargs.class, SuppressWarnings.class));
 
-  BasicFacilityFinder()
+  private final AnnotationCategoryFacilityFactory annoCatFacilityFactory = new AnnotationCategoryFacilityFactory();
+
+  protected FacilityFinder()
   {
   }
 
@@ -35,10 +35,16 @@ class BasicFacilityFinder
     Iterable<Annotation> annotations = pAnnoSupplier.get();
     if (annotations == null)
       return Collections.emptyList();
+    return _getFacilities(annotations, pRequestedFacilityClass, pVisited);
+  }
+
+  private <T> List<T> _getFacilities(Iterable<Annotation> pAnnotations,
+                                     final Class<T> pRequestedFacilityClass, final Set<Annotation> pVisited)
+  {
     List<T> facilities = new ArrayList<>();
-    for (Annotation annoCattedAnnotation : annotations)
+    for (Annotation annoCattedAnnotation : pAnnotations)
     {
-      if (!SYSTEM_ANNOTATIONS.contains(annoCattedAnnotation.annotationType()))
+      if (processAnnotation(annoCattedAnnotation.annotationType()))
         facilities.addAll(_getFacilities(annoCattedAnnotation, pRequestedFacilityClass, pVisited));
     }
     return facilities;
@@ -51,23 +57,17 @@ class BasicFacilityFinder
     {
       if (pRequestedFacilityClass.equals(ICategoryFacilityFactoryProvider.class))
         //noinspection unchecked
-        return (Collection<T>) Collections.singleton(
-            new AnnoCat.AnnotationCategory().createFacilityFactoryProvider((AnnoCat) pAnnoCattedAnnotation));
+        return (Collection<T>) Collections.singleton(annoCatFacilityFactory.createFacility(pAnnoCattedAnnotation));
       return Collections.emptyList();
     }
 
-    if (pVisited.contains(pAnnoCattedAnnotation))
+    if (pVisited.contains(pAnnoCattedAnnotation)) // don't cycle
       return Collections.emptyList();
 
     Collection<ICategoryFacilityFactoryProvider> facilityFactoryProviders = _getFacilities(
-        new IAnnotationSupplier<Iterable<Annotation>>()
-        {
-          @Override
-          public Iterable<Annotation> get()
-          {
-            return Arrays.asList(pAnnoCattedAnnotation.annotationType().getAnnotations());
-          }
-        }, ICategoryFacilityFactoryProvider.class, new HashSet<Annotation>(pVisited)
+        Arrays.asList(pAnnoCattedAnnotation.annotationType().getAnnotations()),
+        ICategoryFacilityFactoryProvider.class,
+        new HashSet<Annotation>(pVisited)
         {{
             add(pAnnoCattedAnnotation);
           }}
@@ -75,7 +75,7 @@ class BasicFacilityFinder
 
     List<T> facilities = new ArrayList<>();
     for (ICategoryFacilityFactoryProvider facilityFactoryProvider : facilityFactoryProviders)
-      facilities.addAll(_getFacilities(facilityFactoryProvider.create(), pAnnoCattedAnnotation, pRequestedFacilityClass));
+      facilities.addAll(_getFacilities(facilityFactoryProvider.get(), pAnnoCattedAnnotation, pRequestedFacilityClass));
     return facilities;
   }
 
@@ -85,21 +85,33 @@ class BasicFacilityFinder
     List<T> facilities = new ArrayList<>();
     for (ICategoryFacilityFactory facilityFactory : pFacilityFactories)
     {
-      if (pRequestedFacilityClass.isAssignableFrom(facilityFactory.getFacilityClass()) &&
-          pAnnoCattedAnnotation.annotationType().equals(facilityFactory.getProcessableAnnotationClass()))
-      {
-        //noinspection unchecked
-        facilities.add(_createFacility((ICategoryFacilityFactory<Annotation, T>) facilityFactory,
-            pAnnoCattedAnnotation, pRequestedFacilityClass));
-      }
+      T facility = _createFacility(facilityFactory, pAnnoCattedAnnotation, pRequestedFacilityClass);
+      if (facility != null)
+        facilities.add(facility);
     }
     return facilities;
   }
 
-  private <A extends Annotation, T> T _createFacility(ICategoryFacilityFactory<A, T> pFacilityFactory,
-                                                      A pAnnoCattedAnnotation, Class<T> pRequestedFacilityClass)
+  protected boolean processAnnotation(Class<? extends Annotation> pAnnotationCls)
   {
-    return pRequestedFacilityClass.cast(pFacilityFactory.createFacilityFactoryProvider(pAnnoCattedAnnotation));
+    return !SYSTEM_ANNOTATIONS.contains(pAnnotationCls);
+  }
+
+  protected <T> T _createFacility(ICategoryFacilityFactory pFacilityFactory,
+                                  Annotation pAnnoCattedAnnotation, Class<T> pRequestedFacilityClass)
+  {
+    Object facility;
+    try
+    {
+      facility = pFacilityFactory.createFacility(pAnnoCattedAnnotation);
+    }
+    catch (AnnotationNotSupportedException e)
+    {
+      return null;
+    }
+    if (facility != null && pRequestedFacilityClass.isAssignableFrom(facility.getClass()))
+      return pRequestedFacilityClass.cast(facility);
+    return null;
   }
 
 }

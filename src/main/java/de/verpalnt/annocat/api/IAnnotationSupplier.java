@@ -1,4 +1,4 @@
-package de.verpalnt.annocat.spi;
+package de.verpalnt.annocat.api;
 
 /**
  * @author PaL

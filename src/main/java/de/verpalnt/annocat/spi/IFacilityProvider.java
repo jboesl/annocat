@@ -1,5 +1,7 @@
 package de.verpalnt.annocat.spi;
 
+import de.verpalnt.annocat.api.IAnnotationSupplier;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.annotation.Annotation;
