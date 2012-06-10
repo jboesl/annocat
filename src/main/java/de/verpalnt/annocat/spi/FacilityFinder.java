@@ -1,7 +1,12 @@
 package de.verpalnt.annocat.spi;
 
-import de.verpalnt.annocat.api.*;
+import de.verpalnt.annocat.api.AnnoCat;
+import de.verpalnt.annocat.api.AnnotationNotSupportedException;
+import de.verpalnt.annocat.api.IAnnotationSupplier;
+import de.verpalnt.annocat.api.ICategoryFacilityFactory;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.annotation.*;
 import java.util.*;
 
@@ -23,6 +28,7 @@ public class FacilityFinder
   {
   }
 
+  @Nonnull
   <T> List<T> getFacilities(IAnnotationSupplier<Iterable<Annotation>> pAnnoSupplier,
                             Class<T> pRequestedFacilityClass)
   {
@@ -53,6 +59,11 @@ public class FacilityFinder
   private <T> Collection<T> _getFacilities(final Annotation pAnnoCattedAnnotation,
                                            final Class<T> pRequestedFacilityClass, Set<Annotation> pVisited)
   {
+
+    Collection<T> customFacilities = getCustomFacilities(pAnnoCattedAnnotation, pRequestedFacilityClass);
+    if (customFacilities != null)
+      return customFacilities;
+
     if (pAnnoCattedAnnotation.annotationType().equals(AnnoCat.class))
     {
       if (pRequestedFacilityClass.equals(ICategoryFacilityFactoryProvider.class))
@@ -85,11 +96,17 @@ public class FacilityFinder
     List<T> facilities = new ArrayList<>();
     for (ICategoryFacilityFactory facilityFactory : pFacilityFactories)
     {
-      T facility = _createFacility(facilityFactory, pAnnoCattedAnnotation, pRequestedFacilityClass);
+      T facility = createFacility(facilityFactory, pAnnoCattedAnnotation, pRequestedFacilityClass);
       if (facility != null)
         facilities.add(facility);
     }
     return facilities;
+  }
+
+  @Nullable
+  protected <T> Collection<T> getCustomFacilities(Annotation pAnnoCattedAnnotation, Class<T> pRequestedFacilityClass)
+  {
+    return null;
   }
 
   protected boolean processAnnotation(Class<? extends Annotation> pAnnotationCls)
@@ -97,8 +114,9 @@ public class FacilityFinder
     return !SYSTEM_ANNOTATIONS.contains(pAnnotationCls);
   }
 
-  protected <T> T _createFacility(ICategoryFacilityFactory pFacilityFactory,
-                                  Annotation pAnnoCattedAnnotation, Class<T> pRequestedFacilityClass)
+  @Nullable
+  protected <T> T createFacility(ICategoryFacilityFactory pFacilityFactory,
+                                 Annotation pAnnoCattedAnnotation, Class<T> pRequestedFacilityClass)
   {
     Object facility;
     try

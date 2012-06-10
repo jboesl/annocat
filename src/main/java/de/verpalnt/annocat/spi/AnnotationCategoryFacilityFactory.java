@@ -3,7 +3,6 @@ package de.verpalnt.annocat.spi;
 import de.verpalnt.annocat.api.AbstractCategoryFacilityFactory;
 import de.verpalnt.annocat.api.AnnoCat;
 import de.verpalnt.annocat.api.ICategoryFacilityFactory;
-import de.verpalnt.annocat.api.ICategoryFacilityFactoryProvider;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
