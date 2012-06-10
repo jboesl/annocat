@@ -7,19 +7,18 @@ import java.lang.annotation.Annotation;
  *         Date: 11.06.12
  *         Time: 00:20
  */
-public class FixedCategoryFacilityFactory<T> implements ICategoryFacilityFactory
+public class FixedCategoryFacilityFactory extends AbstractCategoryFacilityFactory
 {
-
-  private T fixedResult;
-
-  public FixedCategoryFacilityFactory(T pFixedResult)
+  public FixedCategoryFacilityFactory(Class<? extends Annotation> pAnnotation, final Object pFixedResult)
   {
-    fixedResult = pFixedResult;
+    register(pAnnotation, new Creator<Annotation>()
+    {
+      @Override
+      public Object create(Annotation pAnnotation)
+      {
+        return pFixedResult;
+      }
+    });
   }
 
-  @Override
-  public Object createFacility(Annotation pAnnotation) throws AnnotationNotSupportedException
-  {
-    return fixedResult;
-  }
 }

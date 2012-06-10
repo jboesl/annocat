@@ -73,4 +73,14 @@ public class AnnotationSuppliers
     };
   }
 
+  public static IAnnotationSupplier concat(IAnnotationSupplier... pAnnotationSuppliers)
+  {
+    if (pAnnotationSuppliers == null || pAnnotationSuppliers.length == 0)
+      return empty();
+    List<Annotation> annotations = new ArrayList<>();
+    for (IAnnotationSupplier annotationSupplier : pAnnotationSuppliers)
+      annotations.addAll(annotationSupplier.get());
+    return fromAnnotations(annotations);
+  }
+
 }
