@@ -22,7 +22,7 @@ public abstract class AbstractCategoryFacilityFactory implements ICategoryFacili
   {
   }
 
-  protected <A extends Annotation> void register(Class<A> pAnnotationCls, Creator<A> pCreator)
+  protected final <A extends Annotation> void register(Class<A> pAnnotationCls, Creator<A> pCreator)
   {
     creatorMap.put(pAnnotationCls, pCreator);
   }
