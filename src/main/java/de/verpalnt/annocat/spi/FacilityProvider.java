@@ -3,7 +3,6 @@ package de.verpalnt.annocat.spi;
 import de.verpalnt.annocat.api.IAnnotationSupplier;
 
 import javax.annotation.Nonnull;
-import java.lang.annotation.Annotation;
 import java.util.List;
 
 /**
@@ -22,15 +21,15 @@ public class FacilityProvider implements IFacilityProvider
   }
 
   @Override
-  public <T> T getFirst(IAnnotationSupplier<Iterable<Annotation>> pAnnoSupplier, Class<T> pFacilityClass)
+  public <T> T getFirst(@Nonnull Class<T> pFacilityClass, @Nonnull IAnnotationSupplier pAnnoSupplier)
   {
-    List<? extends T> all = getAll(pAnnoSupplier, pFacilityClass);
+    List<? extends T> all = getAll(pFacilityClass, pAnnoSupplier);
     return all.isEmpty() ? null : all.get(0);
   }
 
   @Nonnull
   @Override
-  public <T> List<? extends T> getAll(IAnnotationSupplier<Iterable<Annotation>> pAnnoSupplier, Class<T> pFacilityClass)
+  public <T> List<? extends T> getAll(@Nonnull Class<T> pFacilityClass, @Nonnull IAnnotationSupplier pAnnoSupplier)
   {
     return facilityFinder.getFacilities(pAnnoSupplier, pFacilityClass);
   }

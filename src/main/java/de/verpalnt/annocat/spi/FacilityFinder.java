@@ -29,14 +29,13 @@ public class FacilityFinder
   }
 
   @Nonnull
-  <T> List<T> getFacilities(IAnnotationSupplier<Iterable<Annotation>> pAnnoSupplier,
-                            Class<T> pRequestedFacilityClass)
+  <T> List<T> getFacilities(IAnnotationSupplier pAnnoSupplier, Class<T> pRequestedFacilityClass)
   {
     return _getFacilities(pAnnoSupplier, pRequestedFacilityClass, new HashSet<Annotation>());
   }
 
-  private <T> List<T> _getFacilities(IAnnotationSupplier<Iterable<Annotation>> pAnnoSupplier,
-                                     final Class<T> pRequestedFacilityClass, final Set<Annotation> pVisited)
+  private <T> List<T> _getFacilities(IAnnotationSupplier pAnnoSupplier, Class<T> pRequestedFacilityClass,
+                                     Set<Annotation> pVisited)
   {
     Iterable<Annotation> annotations = pAnnoSupplier.get();
     if (annotations == null)
@@ -44,8 +43,8 @@ public class FacilityFinder
     return _getFacilities(annotations, pRequestedFacilityClass, pVisited);
   }
 
-  private <T> List<T> _getFacilities(Iterable<Annotation> pAnnotations,
-                                     final Class<T> pRequestedFacilityClass, final Set<Annotation> pVisited)
+  private <T> List<T> _getFacilities(Iterable<Annotation> pAnnotations, Class<T> pRequestedFacilityClass,
+                                     Set<Annotation> pVisited)
   {
     List<T> facilities = new ArrayList<>();
     for (Annotation annoCattedAnnotation : pAnnotations)
@@ -56,8 +55,8 @@ public class FacilityFinder
     return facilities;
   }
 
-  private <T> Collection<T> _getFacilities(final Annotation pAnnoCattedAnnotation,
-                                           final Class<T> pRequestedFacilityClass, Set<Annotation> pVisited)
+  private <T> Collection<T> _getFacilities(final Annotation pAnnoCattedAnnotation, Class<T> pRequestedFacilityClass,
+                                           Set<Annotation> pVisited)
   {
 
     Collection<T> customFacilities = getCustomFacilities(pAnnoCattedAnnotation, pRequestedFacilityClass);
@@ -91,7 +90,7 @@ public class FacilityFinder
   }
 
   private <T> Collection<T> _getFacilities(Iterable<ICategoryFacilityFactory> pFacilityFactories,
-                                           final Annotation pAnnoCattedAnnotation, final Class<T> pRequestedFacilityClass)
+                                           Annotation pAnnoCattedAnnotation, Class<T> pRequestedFacilityClass)
   {
     List<T> facilities = new ArrayList<>();
     for (ICategoryFacilityFactory facilityFactory : pFacilityFactories)
@@ -115,8 +114,8 @@ public class FacilityFinder
   }
 
   @Nullable
-  protected <T> T createFacility(ICategoryFacilityFactory pFacilityFactory,
-                                 Annotation pAnnoCattedAnnotation, Class<T> pRequestedFacilityClass)
+  protected <T> T createFacility(ICategoryFacilityFactory pFacilityFactory, Annotation pAnnoCattedAnnotation,
+                                 Class<T> pRequestedFacilityClass)
   {
     Object facility;
     try

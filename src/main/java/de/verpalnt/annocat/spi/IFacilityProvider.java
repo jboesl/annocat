@@ -4,7 +4,6 @@ import de.verpalnt.annocat.api.IAnnotationSupplier;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.lang.annotation.Annotation;
 import java.util.List;
 
 /**
@@ -16,9 +15,9 @@ public interface IFacilityProvider
 {
 
   @Nullable
-  <T> T getFirst(IAnnotationSupplier<Iterable<Annotation>> pAnnoSupplier, Class<T> pAnnoInterpreterType);
+  <T> T getFirst(@Nonnull Class<T> pAnnoInterpreterType, @Nonnull IAnnotationSupplier pAnnoSupplier);
 
   @Nonnull
-  <T> List<? extends T> getAll(IAnnotationSupplier<Iterable<Annotation>> pAnnoSupplier, Class<T> pAnnoInterpreterType);
+  <T> List<? extends T> getAll(@Nonnull Class<T> pAnnoInterpreterType, @Nonnull IAnnotationSupplier pAnnoSupplier);
 
 }
