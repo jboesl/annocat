@@ -1,2 +1,6 @@
 # intellij files
+.idea/
 *.iml
+
+# misc
+target/

@@ -6,7 +6,7 @@
 
   <groupId>de.verpalnt.AnnoCat</groupId>
   <artifactId>AnnoCat</artifactId>
-  <version>1.0</version>
+  <version>1.0-SNAPSHOT</version>
 
   <repositories>
     <repository>
@@ -18,12 +18,25 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.4</version>
+        <version>2.5.1</version>
         <configuration>
           <source>1.7</source>
           <target>1.7</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.4</version>
+        <configuration>
+          <archive>
+            <manifest>
+              <useUniqueVersions>true</useUniqueVersions>
+              <addClasspath>true</addClasspath>
+              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+              <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+            </manifest>
+          </archive>
         </configuration>
       </plugin>
     </plugins>
@@ -36,6 +49,7 @@
       <groupId>com.google.code.findbugs</groupId>
       <artifactId>jsr305</artifactId>
       <version>2.0.0</version>
+      <scope>provided</scope>
     </dependency>
     <!-- for unit tests -->
     <dependency>
