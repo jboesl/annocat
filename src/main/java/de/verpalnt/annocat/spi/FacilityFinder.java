@@ -1,13 +1,10 @@
 package de.verpalnt.annocat.spi;
 
-import de.verpalnt.annocat.api.AnnoCat;
-import de.verpalnt.annocat.api.AnnotationNotSupportedException;
-import de.verpalnt.annocat.api.IAnnotationSupplier;
-import de.verpalnt.annocat.api.ICategoryFacilityFactory;
+import de.verpalnt.annocat.api.*;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import javax.annotation.*;
 import java.lang.annotation.*;
+import java.lang.reflect.AnnotatedElement;
 import java.util.*;
 
 /**
@@ -29,21 +26,21 @@ public class FacilityFinder
   }
 
   @Nonnull
-  <T> List<T> getFacilities(IAnnotationSupplier pAnnoSupplier, Class<T> pRequestedFacilityClass)
+  <T> List<T> getFacilities(AnnotatedElement pAnnoSupplier, Class<T> pRequestedFacilityClass)
   {
     return _getFacilities(pAnnoSupplier, pRequestedFacilityClass, new HashSet<Annotation>());
   }
 
-  private <T> List<T> _getFacilities(IAnnotationSupplier pAnnoSupplier, Class<T> pRequestedFacilityClass,
+  private <T> List<T> _getFacilities(AnnotatedElement pAnnoSupplier, Class<T> pRequestedFacilityClass,
                                      Set<Annotation> pVisited)
   {
-    Iterable<Annotation> annotations = pAnnoSupplier.get();
+    Annotation[] annotations = pAnnoSupplier.getAnnotations();
     if (annotations == null)
       return Collections.emptyList();
     return _getFacilities(annotations, pRequestedFacilityClass, pVisited);
   }
 
-  private <T> List<T> _getFacilities(Iterable<Annotation> pAnnotations, Class<T> pRequestedFacilityClass,
+  private <T> List<T> _getFacilities(Annotation[] pAnnotations, Class<T> pRequestedFacilityClass,
                                      Set<Annotation> pVisited)
   {
     List<T> facilities = new ArrayList<>();
@@ -75,7 +72,7 @@ public class FacilityFinder
       return Collections.emptyList();
 
     Collection<ICategoryFacilityFactoryProvider> facilityFactoryProviders = _getFacilities(
-        Arrays.asList(pAnnoCattedAnnotation.annotationType().getAnnotations()),
+        pAnnoCattedAnnotation.annotationType().getAnnotations(),
         ICategoryFacilityFactoryProvider.class,
         new HashSet<Annotation>(pVisited)
         {{

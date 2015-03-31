@@ -1,12 +1,8 @@
 package de.verpalnt.annocat.api;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.lang.reflect.*;
+import java.util.*;
 
 /**
  * @author PaL
@@ -20,7 +16,7 @@ public class AnnotationSuppliers
   {
   }
 
-  public static IAnnotationSupplier fromField(Class pCls, String pFieldName)
+  public static AnnotatedElement fromField(Class pCls, String pFieldName)
   {
     try
     {
@@ -33,54 +29,92 @@ public class AnnotationSuppliers
     }
   }
 
-  public static IAnnotationSupplier fromField(Field pField)
+  public static AnnotatedElement fromField(Field pField)
   {
-    return fromAnnotations(Arrays.asList(pField.getAnnotations()));
+    return pField;
   }
 
-  public static IAnnotationSupplier fromClass(Class pCls)
+  public static AnnotatedElement fromClass(Class pCls)
   {
-    return fromAnnotations(Arrays.asList(pCls.getAnnotations()));
+    return pCls;
   }
 
-  public static IAnnotationSupplier fromMethod(Method pMethod)
+  public static AnnotatedElement fromMethod(Method pMethod)
   {
-    return fromAnnotations(Arrays.asList(pMethod.getAnnotations()));
+    return pMethod;
   }
 
-  public static IAnnotationSupplier fromAnnotations(final List<Annotation> pAnnotations)
+  public static AnnotatedElement fromAnnotations(List<Annotation> pAnnotations)
   {
-    final List<Annotation> annos = new ArrayList<>(pAnnotations);
-    return new IAnnotationSupplier()
-    {
-      @Override
-      public List<Annotation> get()
-      {
-        return new ArrayList<>(annos);
-      }
-    };
+    if (pAnnotations == null)
+      return null;
+    return new _SimpleAnnotatedElement(pAnnotations.toArray(new Annotation[pAnnotations.size()]));
   }
 
-  public static IAnnotationSupplier empty()
+  public static AnnotatedElement fromAnnotations(Annotation... pAnnotations)
   {
-    return new IAnnotationSupplier()
-    {
-      @Override
-      public List<Annotation> get()
-      {
-        return Collections.emptyList();
-      }
-    };
+    if (pAnnotations == null)
+      return null;
+    return new _SimpleAnnotatedElement(pAnnotations);
   }
 
-  public static IAnnotationSupplier concat(IAnnotationSupplier... pAnnotationSuppliers)
+  public static AnnotatedElement empty()
   {
-    if (pAnnotationSuppliers == null || pAnnotationSuppliers.length == 0)
+    return new _SimpleAnnotatedElement();
+  }
+
+  public static AnnotatedElement concat(AnnotatedElement... pAnnotatedElements)
+  {
+    if (pAnnotatedElements == null || pAnnotatedElements.length == 0)
       return empty();
     List<Annotation> annotations = new ArrayList<>();
-    for (IAnnotationSupplier annotationSupplier : pAnnotationSuppliers)
-      annotations.addAll(annotationSupplier.get());
+    for (AnnotatedElement annotatedElement : pAnnotatedElements)
+      annotations.addAll(Arrays.asList(annotatedElement.getAnnotations()));
     return fromAnnotations(annotations);
   }
 
+
+  /**
+   * AnnotatedElement-Impl
+   */
+  private static class _SimpleAnnotatedElement implements AnnotatedElement
+  {
+    private Annotation[] annotations;
+
+    public _SimpleAnnotatedElement(Annotation... pAnnotations)
+    {
+      annotations = pAnnotations == null ? new Annotation[0] : pAnnotations;
+    }
+
+    @Override
+    public boolean isAnnotationPresent(Class<? extends Annotation> pAnnotationClass)
+    {
+      return getAnnotation(pAnnotationClass) != null;
+    }
+
+    @Override
+    public <T extends Annotation> T getAnnotation(Class<T> pAnnotationClass)
+    {
+      if (annotations.length != 0 && pAnnotationClass != null)
+        for (Annotation annotation : annotations)
+          if (pAnnotationClass.isAssignableFrom(annotation.annotationType()))
+            //noinspection unchecked
+            return (T) annotation;
+      return null;
+    }
+
+    @Override
+    public Annotation[] getAnnotations()
+    {
+      Annotation[] ans = new Annotation[this.annotations.length];
+      System.arraycopy(annotations, 0, ans, 0, annotations.length);
+      return ans;
+    }
+
+    @Override
+    public Annotation[] getDeclaredAnnotations()
+    {
+      return getAnnotations();
+    }
+  }
 }

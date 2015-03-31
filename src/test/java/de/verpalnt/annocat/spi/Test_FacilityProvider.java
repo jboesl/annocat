@@ -1,10 +1,10 @@
 package de.verpalnt.annocat.spi;
 
-import de.verpalnt.annocat.api.AnnotationSuppliers;
-import de.verpalnt.annocat.api.IAnnotationSupplier;
+import de.verpalnt.annocat.api.*;
 import junit.framework.Assert;
 import org.junit.Test;
 
+import java.lang.reflect.AnnotatedElement;
 import java.util.List;
 
 /**
@@ -39,7 +39,7 @@ public class Test_FacilityProvider
       Assert.assertFalse(verifier.isValid(null));
   }
 
-  private IAnnotationSupplier _getSuppliers()
+  private AnnotatedElement _getSuppliers()
   {
     return AnnotationSuppliers.concat(
         AnnotationSuppliers.fromField(Test_FacilityProvider.class, "annotated1"),

@@ -1,9 +1,8 @@
 package de.verpalnt.annocat.spi;
 
-import de.verpalnt.annocat.api.IAnnotationSupplier;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.lang.reflect.AnnotatedElement;
 import java.util.List;
 
 /**
@@ -15,9 +14,9 @@ public interface IFacilityProvider
 {
 
   @Nullable
-  <T> T getFirst(@Nonnull Class<T> pAnnoInterpreterType, @Nonnull IAnnotationSupplier pAnnoSupplier);
+  <T> T getFirst(@Nonnull Class<T> pAnnoInterpreterType, @Nonnull AnnotatedElement pAnnoSupplier);
 
   @Nonnull
-  <T> List<? extends T> getAll(@Nonnull Class<T> pAnnoInterpreterType, @Nonnull IAnnotationSupplier pAnnoSupplier);
+  <T> List<? extends T> getAll(@Nonnull Class<T> pAnnoInterpreterType, @Nonnull AnnotatedElement pAnnoSupplier);
 
 }
