@@ -20,17 +20,17 @@ public class FacilityProvider implements IFacilityProvider
   }
 
   @Override
-  public <T> T getFirst(@Nonnull Class<T> pFacilityClass, @Nonnull AnnotatedElement pAnnoSupplier)
+  public <T> T getFirst(@Nonnull Class<T> pFacilityClass, @Nonnull AnnotatedElement pAnnotatedElement)
   {
-    List<? extends T> all = getAll(pFacilityClass, pAnnoSupplier);
+    List<? extends T> all = getAll(pFacilityClass, pAnnotatedElement);
     return all.isEmpty() ? null : all.get(0);
   }
 
   @Nonnull
   @Override
-  public <T> List<? extends T> getAll(@Nonnull Class<T> pFacilityClass, @Nonnull AnnotatedElement pAnnoSupplier)
+  public <T> List<? extends T> getAll(@Nonnull Class<T> pFacilityClass, @Nonnull AnnotatedElement pAnnotatedElement)
   {
-    return facilityFinder.getFacilities(pAnnoSupplier, pFacilityClass);
+    return facilityFinder.getFacilities(pAnnotatedElement, pFacilityClass);
   }
 
 }

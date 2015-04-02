@@ -9,10 +9,10 @@ import java.util.*;
  *         Date: 10.06.12
  *         Time: 23:27
  */
-public class AnnotationSuppliers
+public class AnnotatedElements
 {
 
-  private AnnotationSuppliers()
+  private AnnotatedElements()
   {
   }
 

@@ -26,15 +26,15 @@ public class FacilityFinder
   }
 
   @Nonnull
-  <T> List<T> getFacilities(AnnotatedElement pAnnoSupplier, Class<T> pRequestedFacilityClass)
+  <T> List<T> getFacilities(AnnotatedElement pAnnotatedElement, Class<T> pRequestedFacilityClass)
   {
-    return _getFacilities(pAnnoSupplier, pRequestedFacilityClass, new HashSet<Annotation>());
+    return _getFacilities(pAnnotatedElement, pRequestedFacilityClass, new HashSet<Annotation>());
   }
 
-  private <T> List<T> _getFacilities(AnnotatedElement pAnnoSupplier, Class<T> pRequestedFacilityClass,
+  private <T> List<T> _getFacilities(AnnotatedElement pAnnotatedElement, Class<T> pRequestedFacilityClass,
                                      Set<Annotation> pVisited)
   {
-    Annotation[] annotations = pAnnoSupplier.getAnnotations();
+    Annotation[] annotations = pAnnotatedElement.getAnnotations();
     if (annotations == null)
       return Collections.emptyList();
     return _getFacilities(annotations, pRequestedFacilityClass, pVisited);

@@ -41,9 +41,9 @@ public class Test_FacilityProvider
 
   private AnnotatedElement _getSuppliers()
   {
-    return AnnotationSuppliers.concat(
-        AnnotationSuppliers.fromField(Test_FacilityProvider.class, "annotated1"),
-        AnnotationSuppliers.fromField(Test_FacilityProvider.class, "annotated2")
+    return AnnotatedElements.concat(
+        AnnotatedElements.fromField(Test_FacilityProvider.class, "annotated1"),
+        AnnotatedElements.fromField(Test_FacilityProvider.class, "annotated2")
     );
   }
 

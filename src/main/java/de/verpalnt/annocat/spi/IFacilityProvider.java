@@ -14,9 +14,9 @@ public interface IFacilityProvider
 {
 
   @Nullable
-  <T> T getFirst(@Nonnull Class<T> pAnnoInterpreterType, @Nonnull AnnotatedElement pAnnoSupplier);
+  <T> T getFirst(@Nonnull Class<T> pAnnoInterpreterType, @Nonnull AnnotatedElement pAnnotatedElement);
 
   @Nonnull
-  <T> List<? extends T> getAll(@Nonnull Class<T> pAnnoInterpreterType, @Nonnull AnnotatedElement pAnnoSupplier);
+  <T> List<? extends T> getAll(@Nonnull Class<T> pAnnoInterpreterType, @Nonnull AnnotatedElement pAnnotatedElement);
 
 }
