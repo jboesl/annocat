@@ -1,4 +1,4 @@
-package de.verpalnt.annocat.spi;
+package de.adito.annocat.spi;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

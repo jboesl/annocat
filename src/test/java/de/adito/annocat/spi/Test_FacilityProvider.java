@@ -1,6 +1,6 @@
-package de.verpalnt.annocat.spi;
+package de.adito.annocat.spi;
 
-import de.verpalnt.annocat.api.*;
+import de.adito.annocat.api.AnnotatedElements;
 import junit.framework.Assert;
 import org.junit.Test;
 
@@ -27,7 +27,7 @@ public class Test_FacilityProvider
     ITestVerifier first = new FacilityProvider().getFirst(ITestVerifier.class, _getSuppliers());
     Assert.assertNotNull(first);
     Assert.assertFalse(first.isValid(""));
-    Assert.assertEquals("de.verpalnt.annocat.spi.FixedValid$Factory$1", first.getClass().getName());
+    Assert.assertEquals("de.adito.annocat.spi.FixedValid$Factory$1", first.getClass().getName());
   }
 
   @Test

@@ -1,6 +1,6 @@
-package de.verpalnt.annocat.spi;
+package de.adito.annocat.spi;
 
-import de.verpalnt.annocat.api.*;
+import de.adito.annocat.api.*;
 
 import javax.annotation.*;
 import java.lang.annotation.*;

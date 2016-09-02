@@ -1,6 +1,6 @@
-package de.verpalnt.annocat.spi;
+package de.adito.annocat.spi;
 
-import de.verpalnt.annocat.api.ICategoryFacilityFactory;
+import de.adito.annocat.api.ICategoryFacilityFactory;
 
 import java.util.List;
 

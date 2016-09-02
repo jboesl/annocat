@@ -1,7 +1,7 @@
-package de.verpalnt.annocat.spi;
+package de.adito.annocat.spi;
 
-import de.verpalnt.annocat.api.AnnoCat;
-import de.verpalnt.annocat.api.FixedCategoryFacilityFactory;
+import de.adito.annocat.api.AnnoCat;
+import de.adito.annocat.api.FixedCategoryFacilityFactory;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -11,27 +11,24 @@ import java.lang.annotation.Target;
 /**
  * @author PaL
  *         Date: 11.06.12
- *         Time: 00:16
+ *         Time: 00:52
  */
-@AnnoCat(FixedValid.Factory.class)
+@AnnoCat(NotNull.Factory.class)
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface FixedValid
+public @interface NotNull
 {
-
-  boolean value();
-
 
   static class Factory extends FixedCategoryFacilityFactory
   {
     public Factory()
     {
-      super(FixedValid.class, new ITestVerifier()
+      super(NotNull.class, new ITestVerifier()
       {
         @Override
         public boolean isValid(Object pObj)
         {
-          return Boolean.TRUE.equals(pObj);
+          return pObj != null;
         }
       });
     }

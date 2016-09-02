@@ -1,4 +1,4 @@
-package de.verpalnt.annocat.api;
+package de.adito.annocat.api;
 
 import java.lang.annotation.Annotation;
 import java.text.MessageFormat;

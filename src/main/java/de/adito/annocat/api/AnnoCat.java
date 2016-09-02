@@ -1,6 +1,6 @@
-package de.verpalnt.annocat.api;
+package de.adito.annocat.api;
 
-import de.verpalnt.annocat.spi.AnnotationCategoryFacilityFactory;
+import de.adito.annocat.spi.AnnotationCategoryFacilityFactory;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
